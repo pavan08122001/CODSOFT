@@ -1,0 +1,43 @@
+import numpy as np
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Step 1: Prepare the dataset
+data = {
+    'User': ['Ravi', 'Priya', 'Kiran', 'Shruti', 'Anil'],
+    'Baahubali': [5, 4, 0, 5, 4],
+    'Ala Vaikunthapurramuloo': [0, 5, 4, 0, 3],
+    'Arjun Reddy': [4, 0, 5, 0, 4],
+    'Eega': [0, 3, 0, 4, 0],
+    'Srimanthudu': [3, 4, 3, 5, 0]
+}
+
+# Convert data to a DataFrame
+df = pd.DataFrame(data)
+
+# Set 'User' as the index for easier handling
+df.set_index('User', inplace=True)
+
+# Step 2: Calculate the similarity between users using cosine similarity
+user_similarity = cosine_similarity(df)
+
+# Create a DataFrame for user similarity for easier readability
+user_similarity_df = pd.DataFrame(user_similarity, index=df.index, columns=df.index)
+
+# Step 3: Function to get top similar users
+def get_top_similar_users(user, n=2):
+    similar_users = user_similarity_df[user].sort_values(ascending=False)
+    return similar_users.index[1:n+1]  # Exclude the user themselves from the result
+
+# Step 4: Recommendation function based on similar users
+def recommend_movies(user, n=2):
+    similar_users = get_top_similar_users(user, n)
+    user_ratings = df.loc[similar_users].mean(axis=0)  # Average ratings of similar users
+    user_watched = df.loc[user] > 0  # Movies that the user has already watched
+    
+    # Recommend movies that the user hasn't watched yet
+    recommendations = user_ratings[~user_watched].sort_values(ascending=False)
+    return recommendations.index[:n]  # Return top 'n' recommendations
+
+# Example: Get movie recommendations for 'Ravi'
+print("Recommended Telugu movies for Ravi:", recommend_movies('Ravi', 2))
