@@ -1,0 +1,37 @@
+def chatbot():
+    print("Chatbot: Hi! How can I assist you today?")
+    
+    while True:
+        # Take input from the user
+        user_input = input("You: ").lower()
+
+        # Check for exit condition
+        if user_input in ['exit', 'bye', 'quit']:
+            print("Chatbot: Goodbye! Have a nice day.")
+            break
+        
+        # Predefined responses using if-else
+        elif 'hello' in user_input or 'hi' in user_input:
+            print("Chatbot: Hello! How can I help you?")
+        
+        elif 'name' in user_input:
+            print("Chatbot: I am a simple chatbot created to assist you!")
+        
+        elif 'weather' in user_input:
+            print("Chatbot: I can't check the weather, but I hope it's sunny!")
+        
+        elif 'help' in user_input:
+            print("Chatbot: Sure! What do you need help with?")
+        
+        elif 'time' in user_input:
+            from datetime import datetime
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            print(f"Chatbot: The current time is {current_time}.")
+        
+        else:
+            print("Chatbot: I'm sorry, I don't understand that. Could you please rephrase?")
+            
+
+# Run the chatbot
+chatbot()
